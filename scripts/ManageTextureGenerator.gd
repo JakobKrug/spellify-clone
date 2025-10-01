@@ -1,5 +1,5 @@
 extends Node 
-class_name ScryfallHttpRequest
+class_name ManageTextureGenerator
 var http_request
 var cardtext : Label
 var cardname : Label
