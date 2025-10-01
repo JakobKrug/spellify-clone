@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://y1p25uds6us1"]
 
-[ext_resource type="Script" uid="uid://btak5toicetfl" path="res://scryfallconnection.gd" id="1_kbped"]
+[ext_resource type="Script" uid="uid://btak5toicetfl" path="res://scripts/scryfallconnection.gd" id="1_kbped"]
 [ext_resource type="Texture2D" uid="uid://qjenk6prhihw" path="res://red-creature.png" id="2_62e2m"]
 [ext_resource type="LabelSettings" uid="uid://g5pqx8ewduq1" path="res://labelSetting.tres" id="3_ee4bf"]
 [ext_resource type="LabelSettings" uid="uid://5cufvlxbfbv0" path="res://powerToughnes.tres" id="4_kbped"]

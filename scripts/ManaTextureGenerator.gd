@@ -1,9 +1,6 @@
 extends Node 
-class_name ManageTextureGenerator
-var http_request
-var cardtext : Label
-var cardname : Label
-var button	 : Button
+class_name ManaTextureGenerator
+
 var manaCost : HBoxContainer
 const manaScene: PackedScene   = preload("res://scenes/mana.tscn")
 var colorToTexture: Dictionary ={
@@ -32,12 +29,7 @@ var colorToTexture: Dictionary ={
 	"19" : "res://manaSymbols/19.webp",
 	"20" : "res://manaSymbols/20.webp", 
 	"X"  : "res://manaSymbols/20.webp"}
-func _ready() -> void:
-	cardtext = $"../VBoxContainer/Card/Cardtext"
-	cardname = $"../VBoxContainer/Card/Cardname"
-	button = $"../VBoxContainer/Button"
-	manaCost = $"../VBoxContainer/Card/HBoxContainer"
-	button.pressed.connect(_get_card)
+
 
 func _init_card_mana(manaText : String):
 	var regex := RegEx.new()
@@ -60,17 +52,4 @@ func get_mana_texture(manaText : String)->TextureRect:
 		mana.texture = load("res://icon.svg")
 		print("keine Textur gefunden zu "+manaText)
 	return mana
-
-func _get_card():
-	http_request = HTTPRequest.new()
-	add_child(http_request)
-	http_request.request_completed.connect(_card_loaded)
-	http_request.request("https://api.scryfall.com/cards/random",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
-
-func _card_loaded(result, response_code, headers, body):
-	var json = JSON.parse_string(body.get_string_from_utf8())
-	cardname.text = (json["name"])
-	if json.has("mana_cost"):
-		_init_card_mana(json["mana_cost"])
-	#label.text = body.get_string_from_utf8()
-	#print(json["mana_cost"])
+	
