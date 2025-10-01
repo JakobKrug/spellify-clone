@@ -1,6 +1,0 @@
-63f7b34db8d8cdea90c76aacccf841ec
-::res://::1759337274
-control.tscn::PackedScene::1739166647003455686::1759328187::0::1::::<><><>0<>0<><>::uid://madqv0f5rwm::::res://scryfallconnection.gd
-icon.svg::CompressedTexture2D::2851731884254029088::1759325158::1759325162::1::::<><><>0<>0<>167fb598d6ac28a8cd13daf5c36e9e17<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-red-creature.png::CompressedTexture2D::1141867555113857676::1759337274::1759337316::1::::<><><>0<>0<>a1d151288de28d674a8384b3b6ec1391<>res://.godot/imported/red-creature.png-be71a05135ee12c4a22108ab9c166b1b.ctex::
-scryfallconnection.gd::GDScript::24778764388693852::1759327393::0::1::::ScryfallHttpRequest<>Node<><>0<>0<><>::
