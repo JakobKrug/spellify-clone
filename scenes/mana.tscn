@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bebu0iom8va5f"]
+
+[ext_resource type="Texture2D" uid="uid://bgvnuwi2k4p5a" path="res://icon.svg" id="1_hx3k0"]
+
+[node name="Mana" type="TextureRect"]
+texture = ExtResource("1_hx3k0")
+expand_mode = 3
+stretch_mode = 4
