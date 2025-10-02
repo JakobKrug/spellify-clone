@@ -8,6 +8,7 @@ var cardname : Label
 var cardtype : Label
 var cardtext : Label
 var cardstats : Label
+var guess : LineEdit
 var button
 var manaCost
 var card_background_path = "res://cardBackgrounds/"
@@ -22,9 +23,14 @@ func _ready():
 	cardstats = $"../VBoxContainer/Card/CardPowerToughness"
 	button = $"../VBoxContainer/Button"
 	manaCost = $"../VBoxContainer/Card/HBoxContainer"
+	guess = $"../VBoxContainer/Guess"
 	manaTextureGenerator.manaCost = manaCost
 	scryfall.card_fetched.connect(_on_card_fetched)
 	button.pressed.connect(_on_button_pressed)
+	guess.text_submitted.connect(_on_guess)
+
+func _on_guess(guessed_char : String):
+	print("Character guessed: " + guessed_char)
 
 func _on_button_pressed():
 	scryfall.fetch_random_card()
