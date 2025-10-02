@@ -2,6 +2,7 @@ extends Node
 class_name ManaTextureGenerator
 
 var manaCost : HBoxContainer
+var guessedSymbols :Array[String]
 const manaScene: PackedScene   = preload("res://scenes/mana.tscn")
 var colorToTexture: Dictionary ={
 	"R": "res://manaSymbols/R.webp",
@@ -28,7 +29,10 @@ var colorToTexture: Dictionary ={
 	"18" : "res://manaSymbols/18.webp",
 	"19" : "res://manaSymbols/19.webp",
 	"20" : "res://manaSymbols/20.webp", 
-	"X"  : "res://manaSymbols/20.webp"}
+	"X"  : "res://manaSymbols/X.webp",
+	"T"  : "res://manaSymbols/T.webp",
+	"C"  : "res://manaSymbols/C.webp"
+}
 
 
 func _init_card_mana(manaText : String):
@@ -46,11 +50,12 @@ func _init_card_mana(manaText : String):
 func get_mana_texture(manaText : String)->TextureRect:
 	var mana = manaScene.instantiate() as TextureRect
 	mana.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	mana.size_flags_horizontal = Control.SIZE_FILL
 	mana.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT 
-	if(colorToTexture.has(manaText)):
+	if(colorToTexture.has(manaText)&& manaText in guessedSymbols):
 		mana.texture = load(colorToTexture[manaText])
 	else:
-		mana.texture = load("res://icon.svg")
-		print("keine Textur gefunden zu "+manaText)
+		mana.texture = load("res://manaSymbols/_.png")
+		#print("keine Textur gefunden zu "+manaText)
 	return mana
 	

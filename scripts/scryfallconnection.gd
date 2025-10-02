@@ -10,6 +10,7 @@ var manaCost
 var cardtextList :VBoxContainer
 var manaTextureGenerator : ManaTextureGenerator
 var guessedCharacters : String
+
 func _ready() -> void:
 	cardname = $"../VBoxContainer/Card/Cardname"
 	cardtype = $"../VBoxContainer/Card/Cardtype"
@@ -21,6 +22,7 @@ func _ready() -> void:
 	manaTextureGenerator = $"./ManaTextureGenerator"
 	manaTextureGenerator.manaCost = $"../VBoxContainer/Card/HBoxContainer"
 	guessedCharacters = "abcdefghijklmnpqrstuvwxyz"
+	manaTextureGenerator.guessedSymbols = ["T","B"]
 	button.pressed.connect(_get_card)
 
 func _get_card():
@@ -28,7 +30,8 @@ func _get_card():
 	add_child(http_request)
 	http_request.request_completed.connect(_get_callback)
 	#http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
-	http_request.request(r"https://api.scryfall.com/cards/named?exact=Precognition%20Field",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+	http_request.request(r"https://api.scryfall.com/cards/named?exact=Underground%20River",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+	#http_request.request(r"https://api.scryfall.com/cards/named?exact=Norwood%20Riders",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
 func _get_callback(_result, _response_code, _headers, body):
 	var json : Dictionary = JSON.parse_string(body.get_string_from_utf8())
 	if json.has("mana_cost"):
@@ -102,10 +105,16 @@ func _get_textline(line: String):
 		var stringInfrontofMana = unparsedLine.substr(0,startMana)
 		var mana = unparsedLine.substr(startMana, endMana+1-startMana).remove_chars('{').remove_chars('}')
 		unparsedLine = unparsedLine.substr(endMana+1, unparsedLine.length()-endMana-1)
-		print("start: " +str(startMana)+" ende: "+str(endMana))
-		print(stringInfrontofMana+" | "+mana+" | "+ unparsedLine)
+		#print("start: " +str(startMana)+" ende: "+str(endMana))
+		#print(stringInfrontofMana+" | "+mana+" | "+ unparsedLine)
 		hbox.add_child(_get_linesegment(stringInfrontofMana, float(stringInfrontofMana.length())/line.length()))
-		hbox.add_child(manaTextureGenerator.get_mana_texture(mana))
+		
+		var manatex =manaTextureGenerator.get_mana_texture(mana)
+		manatex.size_flags_stretch_ratio = 3./line.length()
+		manatex.expand_mode = TextureRect.EXPAND_FIT_HEIGHT
+		manatex.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		manatex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		hbox.add_child(manatex)
 	if unparsedLine.length() > 0:
 		hbox.add_child(_get_linesegment(unparsedLine, float(unparsedLine.length())/line.length()))
 	
