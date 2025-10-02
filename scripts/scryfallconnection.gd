@@ -1,6 +1,7 @@
 extends Node 
 class_name ScryfallHttpRequest
 var http_request
+var card : TextureRect
 var cardname : Label
 var cardtype : Label
 var cardtext : Label
@@ -8,8 +9,10 @@ var cardstats : Label
 var button
 var manaCost
 var manaTextureGenerator : ManaTextureGenerator
+var card_background_path = "res://cardBackgrounds/"
 
 func _ready() -> void:
+	card = $"../VBoxContainer/Card"
 	cardname = $"../VBoxContainer/Card/Cardname"
 	cardtype = $"../VBoxContainer/Card/Cardtype"
 	cardtext = $"../VBoxContainer/Card/Cardtext"
@@ -24,7 +27,7 @@ func _get_card():
 	http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_get_callback)
-	http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+	http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av+colors%3C%3D1+is%3Aspell+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
 
 func _get_callback(_result, _response_code, _headers, body):
 	var json : Dictionary = JSON.parse_string(body.get_string_from_utf8())
@@ -33,7 +36,20 @@ func _get_callback(_result, _response_code, _headers, body):
 	if json.has("name"):
 		cardname.text = _strip_characters(json["name"])
 	if json.has("type_line"):
-		cardtype.text = _strip_characters(json["type_line"])
+		var type : String = json["type_line"]
+		var colors : Array = json["colors"]
+		cardtype.text = _strip_characters(type)
+		
+		var suffix := "-creature.png" if "Creature" in type else "-noncreature.png"
+		var color_map = {
+			"W" : "white",
+			"U" : "blue",
+			"B" : "black",
+			"R" : "red",
+			"G" : "green"
+		}
+		var color = color_map.get(colors[0], "colorless") if colors.size() > 0 else "colorless"
+		card.texture = load(card_background_path + color + suffix)
 	if json.has("oracle_text"):
 		cardtext.text = _strip_characters(json["oracle_text"])
 	if "Creature" in json["type_line"]:
