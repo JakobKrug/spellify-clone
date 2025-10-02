@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qjenk6prhihw"
-path="res://.godot/imported/red-creature.png-be71a05135ee12c4a22108ab9c166b1b.ctex"
+uid="uid://7u8bpt4tyjov"
+path="res://.godot/imported/colorless-creature.png-afc38d3d105b54a64f5a46efd8cb46ac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://red-creature.png"
-dest_files=["res://.godot/imported/red-creature.png-be71a05135ee12c4a22108ab9c166b1b.ctex"]
+source_file="res://cardBackgrounds/colorless-creature.png"
+dest_files=["res://.godot/imported/colorless-creature.png-afc38d3d105b54a64f5a46efd8cb46ac.ctex"]
 
 [params]
 
