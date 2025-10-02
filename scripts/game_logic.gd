@@ -1,6 +1,8 @@
-extends Node 
-class_name ScryfallHttpRequest
-var http_request
+extends Node
+class_name GameLogic
+
+var scryfall : Scryfall
+var manaTextureGenerator: ManaTextureGenerator
 var card : TextureRect
 var cardname : Label
 var cardtype : Label
@@ -8,10 +10,11 @@ var cardtext : Label
 var cardstats : Label
 var button
 var manaCost
-var manaTextureGenerator : ManaTextureGenerator
 var card_background_path = "res://cardBackgrounds/"
 
-func _ready() -> void:
+func _ready():
+	scryfall = $"../Scryfall"
+	manaTextureGenerator = $"../ManaTextureGenerator"
 	card = $"../VBoxContainer/Card"
 	cardname = $"../VBoxContainer/Card/Cardname"
 	cardtype = $"../VBoxContainer/Card/Cardtype"
@@ -19,18 +22,14 @@ func _ready() -> void:
 	cardstats = $"../VBoxContainer/Card/CardPowerToughness"
 	button = $"../VBoxContainer/Button"
 	manaCost = $"../VBoxContainer/Card/HBoxContainer"
-	manaTextureGenerator = $"./ManaTextureGenerator"
-	manaTextureGenerator.manaCost = $"../VBoxContainer/Card/HBoxContainer"
-	button.pressed.connect(_get_card)
+	manaTextureGenerator.manaCost = manaCost
+	scryfall.card_fetched.connect(_on_card_fetched)
+	button.pressed.connect(_on_button_pressed)
 
-func _get_card():
-	http_request = HTTPRequest.new()
-	add_child(http_request)
-	http_request.request_completed.connect(_get_callback)
-	http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av+colors%3C%3D1+is%3Aspell+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+func _on_button_pressed():
+	scryfall.fetch_random_card()
 
-func _get_callback(_result, _response_code, _headers, body):
-	var json : Dictionary = JSON.parse_string(body.get_string_from_utf8())
+func _on_card_fetched(json : Dictionary):
 	if json.has("mana_cost"):
 		manaTextureGenerator._init_card_mana(json["mana_cost"])
 	if json.has("name"):
@@ -39,7 +38,6 @@ func _get_callback(_result, _response_code, _headers, body):
 		var type : String = json["type_line"]
 		var colors : Array = json["colors"]
 		cardtype.text = _strip_characters(type)
-		
 		var suffix := "-creature.png" if "Creature" in type else "-noncreature.png"
 		var color_map = {
 			"W" : "white",
@@ -59,7 +57,6 @@ func _get_callback(_result, _response_code, _headers, body):
 		cardstats.hide()
 
 func _strip_characters(string : String) -> String:
-	print(string)
 	var regex_braces := RegEx.new()
 	regex_braces.compile(r"\{.*?\}")
 	var tap_symbol_string = regex_braces.sub(string, "○", -1)
