@@ -13,3 +13,7 @@ func fetch_random_card():
 func _on_request_completed(_result, _response_code, _headers, body):
     var json = JSON.parse_string(body.get_string_from_utf8())
     emit_signal("card_fetched", json)
+
+#http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+#http_request.request(r"https://api.scryfall.com/cards/named?exact=Underground%20River",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+#http_request.request(r"https://api.scryfall.com/cards/named?exact=Norwood%20Riders",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
