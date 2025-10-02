@@ -21,16 +21,16 @@ func _ready() -> void:
 	manaCost = $"../VBoxContainer/Card/HBoxContainer"
 	manaTextureGenerator = $"./ManaTextureGenerator"
 	manaTextureGenerator.manaCost = $"../VBoxContainer/Card/HBoxContainer"
-	guessedCharacters = "abcdefghijklmnpqrstuvwxyz"
-	manaTextureGenerator.guessedSymbols = ["T","B"]
+	guessedCharacters = ""
+	manaTextureGenerator.guessedSymbols = []
 	button.pressed.connect(_get_card)
 
 func _get_card():
 	http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_get_callback)
-	#http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
-	http_request.request(r"https://api.scryfall.com/cards/named?exact=Underground%20River",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+	http_request.request(r"https://api.scryfall.com/cards/random?q=f%3Av",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
+	#http_request.request(r"https://api.scryfall.com/cards/named?exact=Underground%20River",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
 	#http_request.request(r"https://api.scryfall.com/cards/named?exact=Norwood%20Riders",["Accept: */*", "User-Agent: MTGCardGuessing/1"])
 func _get_callback(_result, _response_code, _headers, body):
 	var json : Dictionary = JSON.parse_string(body.get_string_from_utf8())
