@@ -39,6 +39,7 @@ func _init_card_mana(manaText : String):
 		results.push_front(result.get_string().remove_chars('{').remove_chars('}'))
 	for child in manaCost.get_children():
 		manaCost.remove_child(child)
+		child.queue_free()
 	for r in results:
 		manaCost.add_child(get_mana_texture(r))
 	

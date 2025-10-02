@@ -73,10 +73,19 @@ anchor_left = 0.07924876
 anchor_top = 0.6275862
 anchor_right = 0.91256154
 anchor_bottom = 0.9275862
-text = "Description Description Description Description Description Description DescriptionDescriptionDescriptionDescriptionDescription Description dasdasdasdasdasdasdksk kskakasksdasdasdasd"
 label_settings = ExtResource("3_kcb8u")
 autowrap_mode = 2
 clip_text = true
+metadata/_edit_use_anchors_ = true
+
+[node name="CardTextList" type="VBoxContainer" parent="VBoxContainer/Card"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0864532
+anchor_top = 0.62931037
+anchor_right = 0.9173645
+anchor_bottom = 0.92241377
+theme_override_constants/separation = -2
 metadata/_edit_use_anchors_ = true
 
 [node name="CardPowerToughness" type="Label" parent="VBoxContainer/Card"]
