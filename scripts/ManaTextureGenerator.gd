@@ -2,7 +2,7 @@ extends Node
 class_name ManaTextureGenerator
 
 var manaCost : HBoxContainer
-var guessedSymbols :Array[String]
+var guessedSymbols : Array[String] = []
 const manaScene: PackedScene   = preload("res://scenes/mana.tscn")
 var colorToTexture: Dictionary ={
 	"R": "res://manaSymbols/R.webp",
@@ -34,8 +34,11 @@ var colorToTexture: Dictionary ={
 	"C"  : "res://manaSymbols/C.webp"
 }
 
-
 func _init_card_mana(manaText : String):
+	if manaCost == null:
+		push_warning("ManaTextureGenerator.manaCost is null - cannot initialize mana textures. Assign manaCost before calling _init_card_mana().")
+		return
+
 	var regex := RegEx.new()
 	regex.compile("\\{.*?\\}")
 	var results: Array[Variant] = []
@@ -44,6 +47,7 @@ func _init_card_mana(manaText : String):
 	for child in manaCost.get_children():
 		manaCost.remove_child(child)
 		child.queue_free()
+
 	for r in results:
 		manaCost.add_child(get_mana_texture(r))
 	
