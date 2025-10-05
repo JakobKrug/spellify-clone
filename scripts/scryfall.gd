@@ -2,8 +2,8 @@ extends Node
 class_name Scryfall
 
 signal card_fetched(card_data: Dictionary)
-# var query : String = "https://api.scryfall.com/cards/random?q=f%3Av+colors%3C%3D1+is%3Aspell+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc"
-var query : String = "https://api.scryfall.com/cards/d678e736-7c29-433a-9a2a-b78749252377"
+var query : String = "https://api.scryfall.com/cards/random?q=f%3Av+colors%3C%3D1+is%3Aspell+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc"
+# var query : String = "https://api.scryfall.com/cards/d678e736-7c29-433a-9a2a-b78749252377"
 
 func fetch_random_card():
 	var http_request = HTTPRequest.new()
