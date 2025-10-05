@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2h1v0ibdimp8"]
+[gd_scene load_steps=8 format=3 uid="uid://d2h1v0ibdimp8"]
 
+[ext_resource type="Script" uid="uid://d3l1al68a6sit" path="res://scripts/settings.gd" id="1_kamhd"]
 [ext_resource type="Texture2D" uid="uid://qjenk6prhihw" path="res://cardBackgrounds/red-creature.png" id="2_nbae4"]
 [ext_resource type="LabelSettings" uid="uid://g5pqx8ewduq1" path="res://labelSetting.tres" id="3_kcb8u"]
 [ext_resource type="FontFile" uid="uid://btb2gadxdh8kv" path="res://SpaceMono-Regular.ttf" id="4_kamhd"]
@@ -42,6 +43,13 @@ text = "Reveal Solution"
 [node name="CentralContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Settings" type="VBoxContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("scryfall")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+script = ExtResource("1_kamhd")
+scryfall = NodePath("../../../Scryfall")
 
 [node name="Card" type="TextureRect" parent="VBoxContainer/CentralContainer"]
 layout_mode = 2

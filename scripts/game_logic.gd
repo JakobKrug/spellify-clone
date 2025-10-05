@@ -92,8 +92,11 @@ func _fill_mana_cost(string : String):
 				bbcode_text += "[img width=16 height=16]res://manaSymbols/%s.webp[/img]" % symbol + rest
 			else:
 				bbcode_text += "[img width=16 height=16]res://manaSymbols/_.png[/img]" + rest
-
-	manacost.bbcode_text = bbcode_text
+	if not string == "":
+		manacost.show()
+		manacost.bbcode_text = bbcode_text
+	else:
+		manacost.hide()
 
 func _fill_text_field(string : String):
 	cardtext.size_flags_horizontal = Control.SIZE_FILL
