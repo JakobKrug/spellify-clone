@@ -96,7 +96,6 @@ func _fill_mana_cost(string : String):
 	manacost.bbcode_text = bbcode_text
 
 func _fill_text_field(string : String):
-	cardtext.bbcode_text = [""]
 	cardtext.size_flags_horizontal = Control.SIZE_FILL
 	cardtext.size_flags_vertical = Control.SIZE_FILL
 
@@ -112,20 +111,18 @@ func _fill_text_field(string : String):
 			var symbol = part.substr(0, part.find("}"))
 			var rest = part.substr(part.find("}") + 1)
 			if revealed:
-				bbcode_text += "[img width=12 height=12]res://manaSymbols/%s.webp[/img]" % symbol + rest
+				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/%s.webp[/img]" % symbol + rest
 			else:
-				bbcode_text += "[img width=12 height=12]res://manaSymbols/_.png[/img]" + rest
+				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/_.png[/img]" + rest
 		else:
 			bbcode_text += "{" + part
 
-	cardtext.bbcode_text = "[font_size=" + str(font_size) + "]" + bbcode_text + "[/font_size]"
+	cardtext.bbcode_text = ("[font_size=font-size]" + bbcode_text + "[/font_size]").replace("font-size", str(font_size))
 	while cardtext.get_content_height() > 159.0:
 		if font_size <= 9:
 			break
 		font_size = font_size - 1
-		cardtext.bbcode_text = "[font_size=" + str(font_size) + "]" + bbcode_text + "[/font_size]"
-
-	print(font_size)
+		cardtext.bbcode_text = ("[font_size=font-size]" + bbcode_text + "[/font_size]").replace("font-size", str(font_size))
 
 func _on_revealed_pressed() -> void:
 	font_size = 14
