@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2h1v0ibdimp8"]
+[gd_scene load_steps=8 format=3 uid="uid://d2h1v0ibdimp8"]
 
 [ext_resource type="Script" uid="uid://madqv0f5rwm" path="res://scripts/ManaTextureGenerator.gd" id="2_6fy0u"]
 [ext_resource type="Texture2D" uid="uid://qjenk6prhihw" path="res://cardBackgrounds/red-creature.png" id="2_nbae4"]
 [ext_resource type="LabelSettings" uid="uid://g5pqx8ewduq1" path="res://labelSetting.tres" id="3_kcb8u"]
+[ext_resource type="FontFile" uid="uid://btb2gadxdh8kv" path="res://SpaceMono-Regular.ttf" id="4_kamhd"]
 [ext_resource type="LabelSettings" uid="uid://5cufvlxbfbv0" path="res://powerToughnes.tres" id="4_r1jgk"]
 [ext_resource type="Script" uid="uid://b0sp8gxvpokld" path="res://scripts/game_logic.gd" id="5_vquug"]
 [ext_resource type="Script" uid="uid://dieckvky5fwmm" path="res://scripts/scryfall.gd" id="6_kamhd"]
@@ -23,77 +24,79 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Settings" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="NewCard" type="Button" parent="VBoxContainer/Settings"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Get new card"
 
-[node name="Card" type="TextureRect" parent="VBoxContainer"]
+[node name="Revealed" type="Button" parent="VBoxContainer/Settings"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
+text = "Reveal Solution"
+
+[node name="CentralContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Card" type="TextureRect" parent="VBoxContainer/CentralContainer"]
+layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 9.0
 texture = ExtResource("2_nbae4")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Cardname" type="Label" parent="VBoxContainer/Card"]
+[node name="Cardname" type="Label" parent="VBoxContainer/CentralContainer/Card"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.076847285
-anchor_top = 0.053448275
-anchor_right = 0.9437807
-anchor_bottom = 0.10517241
+offset_left = 31.0
+offset_top = 31.0
+offset_right = 110.0
+offset_bottom = 55.0
+theme_override_fonts/font = ExtResource("4_kamhd")
 text = "CardName"
 label_settings = ExtResource("3_kcb8u")
-metadata/_edit_use_anchors_ = true
 
-[node name="Cardtype" type="Label" parent="VBoxContainer/Card"]
+[node name="Cardtype" type="Label" parent="VBoxContainer/CentralContainer/Card"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0864532
-anchor_top = 0.56551725
-anchor_right = 0.93417484
-anchor_bottom = 0.6172414
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 31.0
+offset_top = 38.5
+offset_right = 110.0
+offset_bottom = 62.5
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_kamhd")
 text = "CardType"
 label_settings = ExtResource("3_kcb8u")
-metadata/_edit_use_anchors_ = true
 
-[node name="Cardtext" type="Label" parent="VBoxContainer/Card"]
+[node name="CardPowerToughness" type="Label" parent="VBoxContainer/CentralContainer/Card"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.07924876
-anchor_top = 0.6275862
-anchor_right = 0.91256154
-anchor_bottom = 0.9275862
-label_settings = ExtResource("3_kcb8u")
-autowrap_mode = 2
-clip_text = true
-metadata/_edit_use_anchors_ = true
-
-[node name="CardTextList" type="VBoxContainer" parent="VBoxContainer/Card"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0864532
-anchor_top = 0.62931037
-anchor_right = 0.9173645
-anchor_bottom = 0.92241377
-theme_override_constants/separation = -2
-metadata/_edit_use_anchors_ = true
-
-[node name="CardPowerToughness" type="Label" parent="VBoxContainer/Card"]
-layout_mode = 0
-anchor_left = 0.78288174
-anchor_top = 0.90172416
-anchor_right = 0.9389778
-anchor_bottom = 0.94310343
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.025665
+offset_top = -57.0
+offset_right = -40.025665
+offset_bottom = -33.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("4_kamhd")
+theme_override_font_sizes/font_size = 16
 text = "1 /1"
 label_settings = ExtResource("4_r1jgk")
 horizontal_alignment = 1
 vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Card"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CentralContainer/Card"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -105,6 +108,19 @@ offset_right = 356.58972
 grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
+
+[node name="OracleText" type="RichTextLabel" parent="VBoxContainer/CentralContainer/Card"]
+clip_children = 2
+layout_mode = 1
+offset_left = 33.0
+offset_top = 347.0
+offset_right = 364.0
+offset_bottom = 513.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("4_kamhd")
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+scroll_active = false
 
 [node name="Guess" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
@@ -127,3 +143,5 @@ script = ExtResource("5_vquug")
 
 [node name="Scryfall" type="Node" parent="."]
 script = ExtResource("6_kamhd")
+
+[connection signal="pressed" from="VBoxContainer/Settings/Revealed" to="GameLogic" method="_on_revealed_pressed"]

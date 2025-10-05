@@ -56,7 +56,7 @@ func get_mana_texture(manaText : String)->TextureRect:
 	mana.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	mana.size_flags_horizontal = Control.SIZE_FILL
 	mana.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT 
-	if(colorToTexture.has(manaText)&& manaText in guessedSymbols):
+	if(colorToTexture.has(manaText) && manaText in guessedSymbols):
 		mana.texture = load(colorToTexture[manaText])
 	else:
 		mana.texture = load("res://manaSymbols/_.png")
