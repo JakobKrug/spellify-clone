@@ -2,17 +2,17 @@ extends Node
 class_name GameLogic
 
 var card_background_path = "res://cardBackgrounds/"
-var guessedCharacters : String = " "
+var guessedCharacters : String = ""
 var current_card : Dictionary = {}
-var font_size : int = 20
+var font_size : int = 14
 var revealed : bool = false
+var always_revealed_characters = "—():"
 
 # Assign Nodes to Variables as soon as the Scene is ready 
 @onready var scryfall: Scryfall = $"../Scryfall"
-@onready var manaTextureGenerator: ManaTextureGenerator = $"../ManaTextureGenerator"
 @onready var card: TextureRect = $"../VBoxContainer/CentralContainer/Card"
 @onready var cardname: Label = $"../VBoxContainer/CentralContainer/Card/Cardname"
-@onready var manaCost: HBoxContainer = $"../VBoxContainer/CentralContainer/Card/HBoxContainer"
+@onready var manacost: RichTextLabel = $"../VBoxContainer/CentralContainer/Card/ManaCost"
 @onready var cardtype: Label = $"../VBoxContainer/CentralContainer/Card/Cardtype"
 @onready var cardtext: RichTextLabel = $"../VBoxContainer/CentralContainer/Card/OracleText"
 @onready var cardstats: Label = $"../VBoxContainer/CentralContainer/Card/CardPowerToughness"
@@ -21,48 +21,38 @@ var revealed : bool = false
 @onready var guess: LineEdit = $"../VBoxContainer/Guess"
 
 func _ready():
-	manaTextureGenerator.manaCost = manaCost
-	scryfall.card_fetched.connect(_get_callback)
+	scryfall.card_fetched.connect(_on_card_fetched)
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
 
 func _on_guess(guessed_char : String):
 	if guessed_char not in guessedCharacters:
-		guessedCharacters += guessed_char.to_lower()
+		guessedCharacters += guessed_char.to_lower() + guessed_char.to_upper()
 	update_card_display()
 
 func _on_button_pressed():
 	revealed = false
 	scryfall.fetch_random_card()
 
-func _get_callback(json):
+func _on_card_fetched(json):
+	font_size = 14
 	current_card = json
-	print(current_card)
+	guessedCharacters = ""
 	update_card_display()
 
 func update_card_display():
 	if current_card.has("mana_cost"):
-		if revealed:
-			manaTextureGenerator._init_card_mana(current_card["mana_cost"])
-		else: 
-			manaTextureGenerator._init_card_mana(current_card["mana_cost"])
+		_fill_mana_cost(current_card["mana_cost"])
 	if current_card.has("name"):
-		if revealed:
-			cardname.text = current_card["name"]
-		else:
-			cardname.text = _strip_characters(current_card["name"])
+		cardname.text = _strip_characters(current_card["name"])
 	if current_card.has("type_line"):
 		var type : String = current_card["type_line"]
 		var colors : Array = current_card["colors"] if current_card.has("colors") else []
 		card.texture = _load_background(type, colors)
-		if revealed:
-			cardtype.text = type
-		else:
-			cardtype.text = _strip_characters(type)
+		cardtype.text = _strip_characters(type)
 	if current_card.has("oracle_text"):
-		print(current_card["oracle_text"])
-		_fillTextField(current_card["oracle_text"])
+		_fill_text_field(current_card["oracle_text"])
 	if current_card.has("type_line") and "Creature" in current_card["type_line"]:
 		cardstats.show()
 		cardstats.text = _strip_characters(current_card.get("power", "")) + "/" + _strip_characters(current_card.get("toughness", ""))
@@ -88,36 +78,28 @@ func _load_background(type: String, colors: Array) -> Texture2D:
 	var suffix := "-creature.png" if "Creature" in type else "-noncreature.png"
 	var color = _get_color_from_array(colors)
 	return load(card_background_path + color + suffix)
-#Idee: man könnte die Einzelnen Zeilen in VBoxen packen und dann immer wenn ein Mana element kommt dann ein HBox einfügen
-#
-#
-#   ------------------------
-#   | texttexttexttexttext |
-#   ------------------------
-#   | text|   |texttexttex | <- hier ist eine Hbox zeile mit "Lücke" für das mana
-#   ------------------------
-#   | texttexttexttexttext |  
-#   ------------------------
-#
-func _strip_characters(string : String) -> String:
-	var stripped_text : String = ""
-	var regex := RegEx.new()
-	regex.compile(r"\{[^}]*\}|\\n|\n|\t| |.")
-	for match in regex.search_all(string):
-		var m : String = match.get_string()
-		if m == " " or m == "\n":
-			stripped_text += m
-		elif m.begins_with("{") and m.ends_with("}") or m in guessedCharacters:
-			stripped_text += m
-		else:
-			stripped_text += "_"
-	return stripped_text
 
-func _fillTextField(string : String):
+func _fill_mana_cost(string : String):
+	var matches = string.split("{")
+	var bbcode_text = matches[0]
+
+	for i in range(1, matches.size()):
+		var part = matches[i]
+		if part.find("}") != -1:
+			var symbol = part.substr(0, part.find("}"))
+			var rest = part.substr(part.find("}") + 1)
+			if revealed:
+				bbcode_text += "[img width=16 height=16]res://manaSymbols/%s.webp[/img]" % symbol + rest
+			else:
+				bbcode_text += "[img width=16 height=16]res://manaSymbols/_.png[/img]" + rest
+
+	manacost.bbcode_text = bbcode_text
+
+func _fill_text_field(string : String):
+	cardtext.bbcode_text = [""]
 	cardtext.size_flags_horizontal = Control.SIZE_FILL
 	cardtext.size_flags_vertical = Control.SIZE_FILL
 
-	# Convert oracle text to BBCode with mana symbols
 	var text = _strip_characters(string)
 	if revealed:
 		text = string
@@ -129,17 +111,40 @@ func _fillTextField(string : String):
 		if part.find("}") != -1:
 			var symbol = part.substr(0, part.find("}"))
 			var rest = part.substr(part.find("}") + 1)
-			# Insert image with width and height relative to font
-			bbcode_text += "[img width=16 height=16]res://manaSymbols/%s.webp[/img]" % symbol + rest
+			if revealed:
+				bbcode_text += "[img width=12 height=12]res://manaSymbols/%s.webp[/img]" % symbol + rest
+			else:
+				bbcode_text += "[img width=12 height=12]res://manaSymbols/_.png[/img]" + rest
 		else:
 			bbcode_text += "{" + part
 
-	cardtext.bbcode_text = bbcode_text
-	# await Engine.get_main_loop().process_frame
-	# cardtext.push_font_size(20)
-	# print(cardtext.get_visible_line_count())
+	cardtext.bbcode_text = "[font_size=" + str(font_size) + "]" + bbcode_text + "[/font_size]"
+	while cardtext.get_content_height() > 159.0:
+		if font_size <= 9:
+			break
+		font_size = font_size - 1
+		cardtext.bbcode_text = "[font_size=" + str(font_size) + "]" + bbcode_text + "[/font_size]"
 
+	print(font_size)
 
 func _on_revealed_pressed() -> void:
+	font_size = 14
 	revealed = !revealed
 	update_card_display()
+
+func _strip_characters(string : String) -> String:
+	var stripped_text : String = ""
+	var regex := RegEx.new()
+	regex.compile(r"\{[^}]*\}|\\n|\n|\t| |.")
+	for match in regex.search_all(string):
+		var m : String = match.get_string()
+		if m == " " or m == "\n":
+			stripped_text += m
+		elif m.begins_with("{") and m.ends_with("}") or m in guessedCharacters or m in always_revealed_characters:
+			stripped_text += m
+		else:
+			stripped_text += "_"
+	if revealed:
+		return string
+	else:
+		return stripped_text
