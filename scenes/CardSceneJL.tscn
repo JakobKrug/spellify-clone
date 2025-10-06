@@ -145,6 +145,16 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
+[node name="artwork" type="TextureRect" parent="VBoxContainer/CentralContainer/Card"]
+layout_mode = 0
+anchor_left = 0.07052441
+anchor_top = 0.11030742
+anchor_right = 0.9243735
+anchor_bottom = 0.56057864
+expand_mode = 4
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
 [node name="Guess" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 alignment = 1

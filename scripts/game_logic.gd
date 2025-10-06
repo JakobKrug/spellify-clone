@@ -6,6 +6,8 @@ var guessedCharacters : Array = []
 var current_card : Dictionary = {}
 var font_size : int = 14
 var revealed : bool = false
+var current_image : ImageTexture = ImageTexture.new()
+
 var always_revealed_characters = "—():,."
 
 @export var keyboard : Keyboard
@@ -21,9 +23,10 @@ var always_revealed_characters = "—():,."
 @onready var new_card = $"../VBoxContainer/Settings/NewCard"
 @onready var reveal = $"../VBoxContainer/Settings/Revealed"
 @onready var guess: LineEdit = $"../VBoxContainer/Guess"
-
+@onready var artwork: TextureRect = $"../VBoxContainer/CentralContainer/Card/artwork"
 func _ready():
 	scryfall.card_fetched.connect(_on_card_fetched)
+	scryfall.image_fetched.connect(_set_image)
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
@@ -48,8 +51,20 @@ func _on_card_fetched(json):
 	current_card = json
 	guessedCharacters = []
 	update_card_display()
-
+func _set_image(image_texture: ImageTexture):
+	current_image = image_texture
+	update_card_display()
+	
 func update_card_display():
+	var mat :Material = load("res://artwork.tres")
+	artwork.set_material(mat)
+	artwork.texture = current_image
+	if(revealed):
+		artwork.material.set_shader_parameter("blur_size", 0.0)
+		artwork.material.set_shader_parameter("zoom", 1.0)
+	else:
+		artwork.material.set_shader_parameter("blur_size", 400.0)
+		artwork.material.set_shader_parameter("zoom", 0.5)
 	if current_card.has("mana_cost"):
 		_fill_mana_cost(current_card["mana_cost"])
 	if current_card.has("name"):
