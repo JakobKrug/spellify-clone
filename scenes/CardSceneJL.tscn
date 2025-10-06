@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2h1v0ibdimp8"]
+[gd_scene load_steps=9 format=3 uid="uid://d2h1v0ibdimp8"]
 
 [ext_resource type="Script" uid="uid://d3l1al68a6sit" path="res://scripts/settings.gd" id="1_kamhd"]
 [ext_resource type="Texture2D" uid="uid://qjenk6prhihw" path="res://cardBackgrounds/red-creature.png" id="2_nbae4"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://btb2gadxdh8kv" path="res://SpaceMono-Regular.ttf" id="4_kamhd"]
 [ext_resource type="LabelSettings" uid="uid://5cufvlxbfbv0" path="res://powerToughnes.tres" id="4_r1jgk"]
 [ext_resource type="Script" uid="uid://b0sp8gxvpokld" path="res://scripts/game_logic.gd" id="5_vquug"]
+[ext_resource type="Script" uid="uid://c66f4fgtm1o2f" path="res://scripts/keyboard.gd" id="6_2k78w"]
 [ext_resource type="Script" uid="uid://dieckvky5fwmm" path="res://scripts/scryfall.gd" id="6_kamhd"]
 
 [node name="Control" type="Control"]
@@ -47,14 +48,22 @@ size_flags_vertical = 3
 [node name="Settings" type="VBoxContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("scryfall")]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
 script = ExtResource("1_kamhd")
 scryfall = NodePath("../../../Scryfall")
+
+[node name="Keyboard" type="GridContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("game_logic", "keyboard_container")]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("6_2k78w")
+game_logic = NodePath("../../../GameLogic")
+keyboard_container = NodePath(".")
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/CentralContainer/Keyboard"]
+layout_mode = 2
 
 [node name="Card" type="TextureRect" parent="VBoxContainer/CentralContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 9.0
 texture = ExtResource("2_nbae4")
 expand_mode = 3
 stretch_mode = 5
@@ -150,8 +159,9 @@ selecting_enabled = false
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="GameLogic" type="Node" parent="."]
+[node name="GameLogic" type="Node" parent="." node_paths=PackedStringArray("keyboard")]
 script = ExtResource("5_vquug")
+keyboard = NodePath("../VBoxContainer/CentralContainer/Keyboard")
 
 [node name="Scryfall" type="Node" parent="."]
 script = ExtResource("6_kamhd")

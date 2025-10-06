@@ -8,6 +8,8 @@ var font_size : int = 14
 var revealed : bool = false
 var always_revealed_characters = "—():"
 
+@export var keyboard : Keyboard
+
 # Assign Nodes to Variables as soon as the Scene is ready 
 @onready var scryfall: Scryfall = $"../Scryfall"
 @onready var card: TextureRect = $"../VBoxContainer/CentralContainer/Card"
@@ -25,6 +27,10 @@ func _ready():
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
+	keyboard.key_pressed.connect(_on_key_pressed)
+
+func _on_key_pressed(key_value: String):
+	guessedCharacters += key_value
 
 func _on_guess(guessed_char : String):
 	if guessed_char not in guessedCharacters:
@@ -113,7 +119,7 @@ func _fill_text_field(string : String):
 		if part.find("}") != -1:
 			var symbol = part.substr(0, part.find("}"))
 			var rest = part.substr(part.find("}") + 1)
-			if revealed:
+			if revealed or part in guessedCharacters:
 				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/%s.webp[/img]" % symbol + rest
 			else:
 				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/_.png[/img]" + rest
