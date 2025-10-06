@@ -28,7 +28,7 @@ func _build_query():
 
 	for key in filters:
 		if filters[key]:
-			include_parts.append("is%3A" + key)
+			include_parts.append("type%3A" + key)
 			print(key)
 
 	var include_query := ""
@@ -39,7 +39,7 @@ func _build_query():
 	if include_query != "":
 		query += "+" + include_query
 
-	query += "+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc+-is%3Aplaneswalker"
+	query += "+-is%3Asplit+-is%3Aflip+-is%3Atransform+-is%3Ameld+-is%3Aleveler+-is%3Amdfc+-type%3Aplaneswalker+-type%3Asaga"
 
 	print("Built query:", query)
 

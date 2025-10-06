@@ -15,9 +15,9 @@ func _make_filter_button(string : String):
 	btn.text = string
 	add_child(btn)
 
-	var key = name.to_lower()
-
-	btn.toggled.connect(func pressed(button : bool):
-		scryfall.filters[key] = button
-		scryfall._build_query()
-	)
+	btn.toggled.connect(func(pressed: bool):
+		var key := btn.text.to_lower()
+		if scryfall.filters.has(key):
+			scryfall.filters[key] = pressed
+			scryfall._build_query()
+)
