@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2h1v0ibdimp8"]
+[gd_scene load_steps=9 format=3 uid="uid://d2h1v0ibdimp8"]
 
-[ext_resource type="Script" uid="uid://madqv0f5rwm" path="res://scripts/ManaTextureGenerator.gd" id="2_6fy0u"]
+[ext_resource type="Script" uid="uid://d3l1al68a6sit" path="res://scripts/settings.gd" id="1_kamhd"]
 [ext_resource type="Texture2D" uid="uid://qjenk6prhihw" path="res://cardBackgrounds/red-creature.png" id="2_nbae4"]
 [ext_resource type="LabelSettings" uid="uid://g5pqx8ewduq1" path="res://labelSetting.tres" id="3_kcb8u"]
 [ext_resource type="FontFile" uid="uid://btb2gadxdh8kv" path="res://SpaceMono-Regular.ttf" id="4_kamhd"]
 [ext_resource type="LabelSettings" uid="uid://5cufvlxbfbv0" path="res://powerToughnes.tres" id="4_r1jgk"]
 [ext_resource type="Script" uid="uid://b0sp8gxvpokld" path="res://scripts/game_logic.gd" id="5_vquug"]
+[ext_resource type="Script" uid="uid://c66f4fgtm1o2f" path="res://scripts/keyboard.gd" id="6_2k78w"]
 [ext_resource type="Script" uid="uid://dieckvky5fwmm" path="res://scripts/scryfall.gd" id="6_kamhd"]
 
 [node name="Control" type="Control"]
@@ -44,10 +45,23 @@ text = "Reveal Solution"
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="Settings" type="VBoxContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("scryfall")]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_kamhd")
+scryfall = NodePath("../../../Scryfall")
+
+[node name="Keyboard" type="GridContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("game_logic", "keyboard_container")]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 10
+script = ExtResource("6_2k78w")
+game_logic = NodePath("../../../GameLogic")
+keyboard_container = NodePath(".")
+
 [node name="Card" type="TextureRect" parent="VBoxContainer/CentralContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 9.0
 texture = ExtResource("2_nbae4")
 expand_mode = 3
 stretch_mode = 5
@@ -96,7 +110,7 @@ label_settings = ExtResource("4_r1jgk")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CentralContainer/Card"]
+[node name="ManaCost" type="RichTextLabel" parent="VBoxContainer/CentralContainer/Card"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -104,22 +118,31 @@ anchor_left = 0.07062813
 anchor_top = 0.05862069
 anchor_right = 0.07062813
 anchor_bottom = 0.09137931
+offset_left = -1.1444092e-05
 offset_right = 356.58972
 grow_horizontal = 2
 grow_vertical = 2
+bbcode_enabled = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+horizontal_alignment = 2
+vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="OracleText" type="RichTextLabel" parent="VBoxContainer/CentralContainer/Card"]
 clip_children = 2
+clip_contents = false
 layout_mode = 1
 offset_left = 33.0
-offset_top = 347.0
-offset_right = 364.0
-offset_bottom = 513.0
+offset_top = 349.0
+offset_right = 363.0
+offset_bottom = 508.0
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("4_kamhd")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
+fit_content = true
 scroll_active = false
 
 [node name="Guess" type="LineEdit" parent="VBoxContainer"]
@@ -134,12 +157,9 @@ selecting_enabled = false
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="ManaTextureGenerator" type="Node" parent="."]
-script = ExtResource("2_6fy0u")
-metadata/_custom_type_script = "uid://madqv0f5rwm"
-
-[node name="GameLogic" type="Node" parent="."]
+[node name="GameLogic" type="Node" parent="." node_paths=PackedStringArray("keyboard")]
 script = ExtResource("5_vquug")
+keyboard = NodePath("../VBoxContainer/CentralContainer/Keyboard")
 
 [node name="Scryfall" type="Node" parent="."]
 script = ExtResource("6_kamhd")
