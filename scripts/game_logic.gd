@@ -6,6 +6,8 @@ var guessedCharacters : String = " "
 var current_card : Dictionary = {}
 var font_size : int = 20
 var revealed : bool = false
+var current_image : ImageTexture = ImageTexture.new()
+
 
 # Assign Nodes to Variables as soon as the Scene is ready 
 @onready var scryfall: Scryfall = $"../Scryfall"
@@ -19,10 +21,11 @@ var revealed : bool = false
 @onready var new_card = $"../VBoxContainer/Settings/NewCard"
 @onready var reveal = $"../VBoxContainer/Settings/Revealed"
 @onready var guess: LineEdit = $"../VBoxContainer/Guess"
-
+@onready var artwork: TextureRect = $"../VBoxContainer/CentralContainer/Card/artwork"
 func _ready():
 	manaTextureGenerator.manaCost = manaCost
 	scryfall.card_fetched.connect(_get_callback)
+	scryfall.image_fetched.connect(_set_image)
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
@@ -40,8 +43,20 @@ func _get_callback(json):
 	current_card = json
 	print(current_card)
 	update_card_display()
-
+func _set_image(image_texture: ImageTexture):
+	current_image = image_texture
+	update_card_display()
+	
 func update_card_display():
+	var mat :Material = load("res://artwork.tres")
+	artwork.set_material(mat)
+	artwork.texture = current_image
+	if(revealed):
+		artwork.material.set_shader_parameter("blur_size", 0.0)
+		artwork.material.set_shader_parameter("zoom", 1.0)
+	else:
+		artwork.material.set_shader_parameter("blur_size", 400.0)
+		artwork.material.set_shader_parameter("zoom", 0.5)
 	if current_card.has("mana_cost"):
 		if revealed:
 			manaTextureGenerator._init_card_mana(current_card["mana_cost"])
@@ -143,3 +158,4 @@ func _fillTextField(string : String):
 func _on_revealed_pressed() -> void:
 	revealed = !revealed
 	update_card_display()
+

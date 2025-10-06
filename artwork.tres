@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b8e733y4e4ros"]
+
+[ext_resource type="Shader" uid="uid://cdhm3p2plwjho" path="res://artwork.gdshader" id="1_4iwpw"]
+
+[resource]
+shader = ExtResource("1_4iwpw")
+shader_parameter/blur_size = 0.0
+shader_parameter/directions = 16.0
+shader_parameter/quality = 3.0
+shader_parameter/zoom = 1.0
