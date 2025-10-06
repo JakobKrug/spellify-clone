@@ -37,10 +37,10 @@ func _on_guess(guessed_char : String):
 	if guessed_char not in guessedCharacters:
 		guessedCharacters.append(guessed_char.to_lower())
 		guessedCharacters.append(guessed_char.to_upper())
-		if lifecounter.value == lifecounter.max_value:
+		if lifecounter.value == lifecounter.min_value:
 			_game_lost()
 		else: 
-			lifecounter.value += 1
+			lifecounter.value -= 1
 			lifecounter.get_child(0).text = str(lifecounter.value) + " guesses left"
 	update_card_display()
 
@@ -57,7 +57,7 @@ func _on_card_fetched(json):
 	font_size = 14
 	current_card = json
 	guessedCharacters = []
-	lifecounter.value = 0.0
+	lifecounter.value = 14
 	lifecounter.get_child(0).text = str(lifecounter.value)
 	keyboard.show()
 	update_card_display()
@@ -73,8 +73,8 @@ func update_card_display():
 		artwork.material.set_shader_parameter("blur_size", 0.0)
 		artwork.material.set_shader_parameter("zoom", 1.0)
 	else:
-		artwork.material.set_shader_parameter("blur_size", 400.0)
-		artwork.material.set_shader_parameter("zoom", 0.5)
+		artwork.material.set_shader_parameter("blur_size", 400.0 * lifecounter.value / lifecounter.max_value)
+		artwork.material.set_shader_parameter("zoom", 1.0)
 	if current_card.has("mana_cost"):
 		_fill_mana_cost(current_card["mana_cost"])
 	if current_card.has("name"):
