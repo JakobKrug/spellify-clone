@@ -36,6 +36,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Get new card"
 
+[node name="LifeCounter" type="ProgressBar" parent="VBoxContainer/Settings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 15.0
+step = 1.0
+rounded = true
+show_percentage = false
+
+[node name="Label" type="Label" parent="VBoxContainer/Settings/LifeCounter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Revealed" type="Button" parent="VBoxContainer/Settings"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -157,9 +176,10 @@ selecting_enabled = false
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="GameLogic" type="Node" parent="." node_paths=PackedStringArray("keyboard")]
+[node name="GameLogic" type="Node" parent="." node_paths=PackedStringArray("keyboard", "lifecounter")]
 script = ExtResource("5_vquug")
 keyboard = NodePath("../VBoxContainer/CentralContainer/Keyboard")
+lifecounter = NodePath("../VBoxContainer/Settings/LifeCounter")
 
 [node name="Scryfall" type="Node" parent="."]
 script = ExtResource("6_kamhd")

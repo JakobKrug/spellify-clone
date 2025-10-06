@@ -9,6 +9,7 @@ var revealed : bool = false
 var always_revealed_characters = "—():,."
 
 @export var keyboard : Keyboard
+@export var lifecounter : ProgressBar
 
 # Assign Nodes to Variables as soon as the Scene is ready 
 @onready var scryfall: Scryfall = $"../Scryfall"
@@ -27,17 +28,23 @@ func _ready():
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
-	keyboard.key_pressed.connect(_on_key_pressed)
-
-func _on_key_pressed(key_value: String):
-	guessedCharacters.append(key_value)
-	update_card_display()
+	keyboard.key_pressed.connect(_on_guess)
 
 func _on_guess(guessed_char : String):
 	if guessed_char not in guessedCharacters:
 		guessedCharacters.append(guessed_char.to_lower())
 		guessedCharacters.append(guessed_char.to_upper())
+		if lifecounter.value == lifecounter.max_value:
+			_game_lost()
+		else: 
+			lifecounter.value += 1
+			lifecounter.get_child(0).text = str(lifecounter.value) + " guesses left"
 	update_card_display()
+
+func _game_lost():
+	revealed = true
+	update_card_display()
+	keyboard.hide()
 
 func _on_button_pressed():
 	revealed = false
@@ -47,6 +54,9 @@ func _on_card_fetched(json):
 	font_size = 14
 	current_card = json
 	guessedCharacters = []
+	lifecounter.value = 0.0
+	lifecounter.get_child(0).text = str(lifecounter.value)
+	keyboard.show()
 	update_card_display()
 
 func update_card_display():
@@ -70,6 +80,7 @@ func update_card_display():
 	guess.text = ""
 	guess.grab_focus()
 	print(guessedCharacters)
+	print(lifecounter.value)
 
 func _get_color_from_array(colors: Array) -> String:
 	var color_map = {
