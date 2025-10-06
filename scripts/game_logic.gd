@@ -26,6 +26,7 @@ var always_revealed_characters = "—():,."
 @onready var artwork: TextureRect = $"../VBoxContainer/CentralContainer/Card/artwork"
 func _ready():
 	scryfall.card_fetched.connect(_on_card_fetched)
+	scryfall.image_fetched.connect(_set_image)
 	new_card.pressed.connect(_on_button_pressed)
 	guess.text_submitted.connect(_on_guess)
 	scryfall.fetch_random_card()
