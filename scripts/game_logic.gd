@@ -2,11 +2,11 @@ extends Node
 class_name GameLogic
 
 var card_background_path = "res://cardBackgrounds/"
-var guessedCharacters : String = ""
+var guessedCharacters : Array = []
 var current_card : Dictionary = {}
 var font_size : int = 14
 var revealed : bool = false
-var always_revealed_characters = "—():"
+var always_revealed_characters = "—():,."
 
 @export var keyboard : Keyboard
 
@@ -30,11 +30,13 @@ func _ready():
 	keyboard.key_pressed.connect(_on_key_pressed)
 
 func _on_key_pressed(key_value: String):
-	guessedCharacters += key_value
+	guessedCharacters.append(key_value)
+	update_card_display()
 
 func _on_guess(guessed_char : String):
 	if guessed_char not in guessedCharacters:
-		guessedCharacters += guessed_char.to_lower() + guessed_char.to_upper()
+		guessedCharacters.append(guessed_char.to_lower())
+		guessedCharacters.append(guessed_char.to_upper())
 	update_card_display()
 
 func _on_button_pressed():
@@ -44,7 +46,7 @@ func _on_button_pressed():
 func _on_card_fetched(json):
 	font_size = 14
 	current_card = json
-	guessedCharacters = ""
+	guessedCharacters = []
 	update_card_display()
 
 func update_card_display():
@@ -67,6 +69,7 @@ func update_card_display():
 	guess.placeholder_text = "Guess:"
 	guess.text = ""
 	guess.grab_focus()
+	print(guessedCharacters)
 
 func _get_color_from_array(colors: Array) -> String:
 	var color_map = {
@@ -94,7 +97,7 @@ func _fill_mana_cost(string : String):
 		if part.find("}") != -1:
 			var symbol = part.substr(0, part.find("}"))
 			var rest = part.substr(part.find("}") + 1)
-			if revealed:
+			if revealed or "{" + symbol + "}" in guessedCharacters:
 				bbcode_text += "[img width=16 height=16]res://manaSymbols/%s.webp[/img]" % symbol + rest
 			else:
 				bbcode_text += "[img width=16 height=16]res://manaSymbols/_.png[/img]" + rest
@@ -119,7 +122,7 @@ func _fill_text_field(string : String):
 		if part.find("}") != -1:
 			var symbol = part.substr(0, part.find("}"))
 			var rest = part.substr(part.find("}") + 1)
-			if revealed or part in guessedCharacters:
+			if revealed or "{" + symbol + "}" in guessedCharacters:
 				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/%s.webp[/img]" % symbol + rest
 			else:
 				bbcode_text += "[img width=font-size height=font-size]res://manaSymbols/_.png[/img]" + rest

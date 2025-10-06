@@ -54,12 +54,10 @@ scryfall = NodePath("../../../Scryfall")
 [node name="Keyboard" type="GridContainer" parent="VBoxContainer/CentralContainer" node_paths=PackedStringArray("game_logic", "keyboard_container")]
 layout_mode = 2
 size_flags_horizontal = 3
+columns = 10
 script = ExtResource("6_2k78w")
 game_logic = NodePath("../../../GameLogic")
 keyboard_container = NodePath(".")
-
-[node name="TextureButton" type="TextureButton" parent="VBoxContainer/CentralContainer/Keyboard"]
-layout_mode = 2
 
 [node name="Card" type="TextureRect" parent="VBoxContainer/CentralContainer"]
 layout_mode = 2
